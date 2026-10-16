@@ -11,16 +11,15 @@ class models:
         self.data = nflverse()
         
 
-    
     def create_decision_models(self):
         
         X_train = self.data.get_features_df_train()
         y_train = self.data.get_target_df_train()
-        preprocessor = preprocessor.create_preprocessor(X_train)
-        X_train = preprocessor.fit_transform(X_train)
+        processor = preprocessor.create_preprocessor(X_train)
+        X_train = processor.fit_transform(X_train)
         
         # Save preprocessor
-        dump(preprocessor, 'src/artifacts/preprocessor.joblib')
+        dump(processor, 'src/artifacts/preprocessor.joblib')
         
         # Touchdown Model
         touchdown_model = LGBMClassifier(
