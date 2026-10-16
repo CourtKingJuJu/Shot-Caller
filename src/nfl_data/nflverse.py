@@ -101,10 +101,19 @@ class nflverse:
         defensive_state = ['defenders_in_box', 'def_DL', 'def_LB', 'def_DB', 'defense_man_zone_type', 'defense_coverage_type', 'number_of_pass_rushers']
         X_features = game_state + offensive_state + defensive_state
         
-        train_df = self.working_df[self.working_df['season'] <= 2024]
+        train_df = self.working_df[self.working_df['season'] <= 2025]
         return train_df[X_features]
     
+    
+    def get_target_df_train(self):
+        targets = ['first_down', 'touchdown', 'yards_gained', 'turnover']
+        train_df = self.working_df[self.working_df['season'] <= 2025]
 
+        return train_df[targets]
+    
+    """
+    Legacy Test dataset used for v1 verification
+    """  
     def get_features_df_test(self):
         game_state = ['down', 'ydstogo', 'yardline_100', 'qtr', 'quarter_seconds_remaining', 'goal_to_go', 'score_differential']
         offensive_state = ['play_type_nfl', 'shotgun', 'no_huddle', 'offense_formation', 'off_RB', 'off_TE', 'off_WR']
@@ -114,12 +123,9 @@ class nflverse:
         test_df = self.working_df[self.working_df['season'] == 2025]
         return test_df[X_features]
     
-    def get_target_df_train(self):
-        targets = ['first_down', 'touchdown', 'yards_gained', 'turnover']
-        train_df = self.working_df[self.working_df['season'] <= 2024]
-
-        return train_df[targets]
-    
+    """
+    Legacy Test dataset used for v1 verification
+    """
     def get_target_df_test(self):
         targets = ['first_down', 'touchdown', 'yards_gained', 'turnover']
         test_df = self.working_df[self.working_df['season'] == 2025]

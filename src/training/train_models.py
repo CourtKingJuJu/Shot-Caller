@@ -10,15 +10,17 @@ class models:
     def __init__(self) -> None:
         self.data = nflverse()
         
-        self.X_train = self.data.get_features_df_train()
-        self.y_train = self.data.get_target_df_train()
-        self.preprocessor = preprocessor.create_preprocessor(self.X_train)
-        self.X_train = self.preprocessor.fit_transform(self.X_train)
 
     
     def create_decision_models(self):
+        
+        X_train = self.data.get_features_df_train()
+        y_train = self.data.get_target_df_train()
+        preprocessor = preprocessor.create_preprocessor(X_train)
+        X_train = preprocessor.fit_transform(X_train)
+        
         # Save preprocessor
-        dump(self.preprocessor, 'src/artifacts/preprocessor.joblib')
+        dump(preprocessor, 'src/artifacts/preprocessor.joblib')
         
         # Touchdown Model
         touchdown_model = LGBMClassifier(
@@ -27,7 +29,7 @@ class models:
             random_state=42
         )
 
-        touchdown_model.fit(self.X_train, self.y_train['touchdown'])
+        touchdown_model.fit(X_train, y_train['touchdown'])
         dump(touchdown_model, 'src/artifacts/touchdown_model.joblib')
         
         # First Down Model
@@ -37,7 +39,7 @@ class models:
             random_state=42
         )
         
-        fd_model.fit(self.X_train, self.y_train['first_down'])
+        fd_model.fit(X_train, y_train['first_down'])
         dump(fd_model, 'src/artifacts/fd_model.joblib')
         
         # Turnover Model
@@ -47,7 +49,7 @@ class models:
             random_state=42
         )
         
-        turnover_model.fit(self.X_train, self.y_train['turnover'])
+        turnover_model.fit(X_train, y_train['turnover'])
         dump(turnover_model, 'src/artifacts/turnover_model.joblib')
 
         # Quantile Yard Models
@@ -61,8 +63,8 @@ class models:
                 learning_rate=0.05,
                 random_state=42
             )
-            yard_model.fit(self.X_train, self.y_train['yards_gained'])
-            dump(yard_model, f'src/artifacts/yard_p{q * 100}.joblib')
+            yard_model.fit(X_train, y_train['yards_gained'])
+            dump(yard_model, f'src/artifacts/yard_p{int(q * 100)}.joblib')
                 
 
 
